@@ -4,6 +4,7 @@ import joblib
 import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV
 from api_utils import IndodaxAPI
 
 class PricePredictor:
@@ -29,21 +30,27 @@ class PricePredictor:
         return df
 
     def train_model(self):
-        """Melatih model berdasarkan data real-time dari Market API"""
         df = self.get_market_data()
         if df is None or len(df) < 10:
             print(f"[❌] Data pasar tidak cukup untuk melatih model AI ({len(df)} data).")
             return
 
-        X = df[['price']]
+        X = df[['price', 'RSI', 'SMA', 'BB_Upper', 'BB_Lower']]
         y = df['target']
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        self.model.fit(X_train, y_train)
+
+        param_grid = {
+            "n_estimators": [50, 100, 200],
+            "max_depth": [None, 10, 20, 30]
+        }
+        grid_search = GridSearchCV(RandomForestRegressor(random_state=42), param_grid, cv=3)
+        grid_search.fit(X_train, y_train)
+
+        self.model = grid_search.best_estimator_
 
         print(f"📊 Model training complete untuk {self.pair}. Score: {self.model.score(X_test, y_test)}")
 
-        # **Simpan hanya model, tanpa feature_names**
         joblib.dump(self.model, self.model_file)
         print(f"✅ Model telah disimpan sebagai `{self.model_file}`")
 
