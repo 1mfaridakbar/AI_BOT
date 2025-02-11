@@ -61,13 +61,14 @@ class TradingBotAI:
             print("[❌] Gagal memprediksi harga. Tidak melakukan trading.")
             logging.error(f"Gagal memprediksi harga untuk {self.pair}. Tidak melakukan trading.")
             return
-        elif prediksi_harga < harga_beli:
+        elif prediksi_harga < harga_beli and rsi < 40:  # RSI rendah, tren turun
             print("[❌] AI memprediksi harga akan turun. Tidak melakukan pembelian.")
             logging.info(f"AI memprediksi harga akan turun untuk {self.pair}. Tidak melakukan pembelian.")
             return
-        else:
-            print("[✅] AI memprediksi harga akan naik. Melanjutkan eksekusi trading.")
+        elif prediksi_harga > harga_beli and rsi > 50 and sma > harga_beli:  # Tren naik, AI lebih agresif
+            print("[✅] AI memprediksi harga akan naik dengan tren positif. Melanjutkan eksekusi trading.")
             logging.info(f"AI memprediksi harga akan naik untuk {self.pair}. Melanjutkan eksekusi trading.")
+
 
         print(f"Harga Beli: {harga_beli}")
         print(f"Stop Loss: {stop_loss}")

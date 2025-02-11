@@ -2,16 +2,20 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
 from api_utils import IndodaxAPI
+import logging
+
+# Konfigurasi Logging
+logging.basicConfig(filename='ai_model_log.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 class PricePredictor:
-    def __init__(self, api, pair="btcidr", model_file=None):
+    def __init__(self, api, pair="btcidr"):
         self.api = api
         self.pair = pair
-        self.model_file = model_file if model_file else f"price_predictor_{self.pair}.pkl"
+        self.model_file = f"price_predictor_{self.pair}.pkl"
         self.model = RandomForestRegressor(n_estimators=100, random_state=42)
 
     def is_model_trained(self):
@@ -25,7 +29,7 @@ class PricePredictor:
             return None
 
         df = df.sort_values(by=['date']).reset_index(drop=True)
-        df['target'] = df['price'].shift(-1)  # Prediksi harga berikutnya
+        df['target'] = df['price'].shift(-1)
         df.dropna(inplace=True)
         return df
 
@@ -50,12 +54,12 @@ class PricePredictor:
         self.model = grid_search.best_estimator_
 
         print(f"📊 Model training complete untuk {self.pair}. Score: {self.model.score(X_test, y_test)}")
+        logging.info(f"Model AI dilatih untuk {self.pair} dengan score: {self.model.score(X_test, y_test)}")
 
         joblib.dump(self.model, self.model_file)
         print(f"✅ Model telah disimpan sebagai `{self.model_file}`")
 
     def predict_price(self, current_price):
-        """Memastikan model sudah dilatih sebelum prediksi"""
         if not self.is_model_trained():
             print(f"[⚠️] Model AI belum tersedia untuk {self.pair}, mencoba melatih model...")
             self.train_model()
@@ -63,10 +67,7 @@ class PricePredictor:
                 print(f"[❌] Gagal melatih model AI, tidak bisa melakukan prediksi.")
                 return None
 
-        # **Pastikan hanya memuat model, tidak ada unpacking yang salah**
         self.model = joblib.load(self.model_file)
-
-        # **Gunakan DataFrame agar sesuai dengan fitur yang digunakan**
         df = pd.DataFrame([[current_price]], columns=["price"])
         return self.model.predict(df)[0]
 
