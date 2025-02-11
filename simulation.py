@@ -5,7 +5,6 @@ import os
 from api_utils import IndodaxAPI
 from analysis import TechnicalAnalysis
 from ai_model import PricePredictor
-from data_collector import DataCollector
 
 class SimulationBotAI:
     def __init__(self, api, pair="btcidr", modal=20000, stop_loss_pct=0.005, take_profit_pct=0.005):
@@ -17,21 +16,13 @@ class SimulationBotAI:
         self.riwayat_harga = []
         self.status = "Menunggu"
         self.analysis = TechnicalAnalysis(api, pair)
-        self.model = PricePredictor(pair)
-        self.collector = DataCollector(api, pair)
-
-    def collect_and_train_data(self):
-        print("Mengumpulkan data historis dan melatih model AI...")
-        self.collector.log_transaction("DATA_COLLECTION", 0, 0)
-        self.model.train_model()
-        print("Model AI telah diperbarui dengan data terbaru.")
+        self.model = PricePredictor(api, pair)
 
     def ensure_model(self):
+        """Pastikan model AI sudah siap sebelum simulasi"""
         if not self.model.is_model_trained():
-            print("[⚠️] Model belum tersedia, mengumpulkan data sebelum melatih...")
-            self.collector.save_to_csv()  # Pastikan data tersedia sebelum training
-            self.collect_and_train_data()
-
+            print("[⚠️] Model belum tersedia, melakukan pelatihan...")
+            self.model.train_model()
 
     def simulate_trade(self):
         self.ensure_model()
@@ -44,7 +35,10 @@ class SimulationBotAI:
         take_profit = harga_beli * (1 + self.take_profit_pct)
 
         print(f"\nPrediksi AI: Harga akan menjadi {prediksi_harga}")
-        if prediksi_harga < harga_beli:
+        if prediksi_harga is None:
+            print("[❌] Gagal memprediksi harga. Simulasi dihentikan.")
+            return
+        elif prediksi_harga < harga_beli:
             print("[❌] AI memprediksi harga akan turun. Simulasi tidak melakukan pembelian.")
             return
         else:
@@ -54,8 +48,6 @@ class SimulationBotAI:
         print(f"Stop Loss: {stop_loss}")
         print(f"Take Profit: {take_profit}")
 
-        self.collector.log_transaction("BUY", harga_beli, jumlah_crypto)
-
         while True:
             harga_sekarang = self.api.get_ticker(self.pair)['price'].iloc[-1]
             self.riwayat_harga.append((datetime.now(), harga_sekarang))
@@ -64,12 +56,10 @@ class SimulationBotAI:
             if harga_sekarang >= take_profit:
                 self.status = "✅ Take Profit Tercapai"
                 print(f"[✅] Take Profit Tercapai pada harga {harga_sekarang}! Simulasi menjual aset...")
-                self.collector.log_transaction("SELL", harga_sekarang, jumlah_crypto)
                 break
             elif harga_sekarang <= stop_loss:
                 self.status = "❌ Stop Loss Terpenuhi"
                 print(f"[❌] Stop Loss Terpenuhi pada harga {harga_sekarang}! Simulasi menjual aset...")
-                self.collector.log_transaction("SELL", harga_sekarang, jumlah_crypto)
                 break
             else:
                 print("[⏳] Harga belum mencapai Take Profit atau Stop Loss...")

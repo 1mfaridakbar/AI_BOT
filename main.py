@@ -7,7 +7,7 @@ from datetime import datetime
 from api_utils import IndodaxAPI
 from analysis import TechnicalAnalysis
 from simulation import SimulationBotAI
-from execute import TradingBot  # Tambahkan impor TradingBot
+from execute import TradingBotAI  # Tambahkan impor TradingBot
 
 api = IndodaxAPI()
 
@@ -26,7 +26,7 @@ def main():
             bot = SimulationBotAI(api=api)
             bot.simulate_trade()
         elif pilihan == "2":
-            trading_bot = TradingBot(api=api)  # Buat instance TradingBot
+            trading_bot = TradingBotAI(api=api)  # Buat instance TradingBot
             trading_bot.execute_trade()  # Jalankan eksekusi trading
         elif pilihan == "3":
             break
