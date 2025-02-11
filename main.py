@@ -4,13 +4,16 @@ import json
 import pandas as pd
 import ta
 from datetime import datetime
-from api_utils import get_balance, get_ticker, execute_trade
-from analysis import technical_analysis
-from simulation import simulate_trade
+from api_utils import IndodaxAPI
+from analysis import TechnicalAnalysis
+from simulation import SimulationBotAI
+from execute import TradingBot  # Tambahkan impor TradingBot
+
+api = IndodaxAPI()
 
 # Fungsi utama untuk menampilkan saldo dan kontrol trading
 def main():
-    saldo = get_balance()
+    saldo = api.get_balance()
     print(f"Saldo IDR: {saldo['idr']}" if saldo else "Gagal mengambil saldo!")
     
     while True:
@@ -20,9 +23,11 @@ def main():
         pilihan = input("Pilih opsi: ")
         
         if pilihan == "1":
-            simulate_trade()
+            bot = SimulationBotAI(api=api)
+            bot.simulate_trade()
         elif pilihan == "2":
-            execute_trade()  # Memanggil fungsi eksekusi trading yang telah diperbarui
+            trading_bot = TradingBot(api=api)  # Buat instance TradingBot
+            trading_bot.execute_trade()  # Jalankan eksekusi trading
         elif pilihan == "3":
             break
         else:

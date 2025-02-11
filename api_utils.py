@@ -2,16 +2,19 @@ import requests
 import time
 import hashlib
 import hmac
+import os
+from dotenv import load_dotenv
 import pandas as pd
 
-API_URL = "https://indodax.com/tapi"
-API_KEY = "VONQF0DA-CG1USP8W-PYW9NDGK-V2G0PHZ8-VY1E69YA"
-SECRET_KEY = "90245e9ccd31f984bbe5117e4e79d422197c063be44f36b4844f05cd227a52665f83d4f4b11e6267"
+load_dotenv()
+API_URL = os.getenv("API_URL")
+API_KEY = os.getenv("API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 class IndodaxAPI:
-    def __init__(self, api_key, secret_key):
-        self.api_key = api_key
-        self.secret_key = secret_key
+    def __init__(self):
+        self.api_key = API_KEY
+        self.secret_key = SECRET_KEY
 
     def generate_signature(self, payload):
         query_string = "&".join([f"{key}={value}" for key, value in payload.items()])
@@ -37,7 +40,6 @@ class IndodaxAPI:
         df = pd.DataFrame(data)
         df['price'] = df['price'].astype(float)
         return df[['price', 'date']]
-
 
 # Fungsi untuk eksekusi trading
 # Fungsi untuk eksekusi trading dengan manajemen risiko

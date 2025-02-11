@@ -1,9 +1,13 @@
 import time
+from datetime import datetime
+import joblib
+import os
 from api_utils import IndodaxAPI
 from analysis import TechnicalAnalysis
-from datetime import datetime
+from ai_model import PricePredictor
+from data_collector import DataCollector
 
-class SimulationBot:
+class SimulationBotAI:
     def __init__(self, api, pair="btcidr", modal=20000, stop_loss_pct=0.005, take_profit_pct=0.005):
         self.api = api
         self.pair = pair
@@ -13,18 +17,44 @@ class SimulationBot:
         self.riwayat_harga = []
         self.status = "Menunggu"
         self.analysis = TechnicalAnalysis(api, pair)
+        self.model = PricePredictor(pair)
+        self.collector = DataCollector(api, pair)
+
+    def collect_and_train_data(self):
+        print("Mengumpulkan data historis dan melatih model AI...")
+        self.collector.log_transaction("DATA_COLLECTION", 0, 0)
+        self.model.train_model()
+        print("Model AI telah diperbarui dengan data terbaru.")
+
+    def ensure_model(self):
+        if not self.model.is_model_trained():
+            print("[⚠️] Model belum tersedia, mengumpulkan data sebelum melatih...")
+            self.collector.save_to_csv()  # Pastikan data tersedia sebelum training
+            self.collect_and_train_data()
+
 
     def simulate_trade(self):
+        self.ensure_model()
+
         analysis = self.analysis.analyze()
         harga_beli = analysis['price']
         jumlah_crypto = self.modal / harga_beli
+        prediksi_harga = self.model.predict_price(harga_beli)
         stop_loss = harga_beli * (1 - self.stop_loss_pct)
         take_profit = harga_beli * (1 + self.take_profit_pct)
 
-        print(f"\nSimulasi Trading: {self.pair}")
+        print(f"\nPrediksi AI: Harga akan menjadi {prediksi_harga}")
+        if prediksi_harga < harga_beli:
+            print("[❌] AI memprediksi harga akan turun. Simulasi tidak melakukan pembelian.")
+            return
+        else:
+            print("[✅] AI memprediksi harga akan naik. Melanjutkan simulasi trading.")
+
         print(f"Harga Beli: {harga_beli}")
         print(f"Stop Loss: {stop_loss}")
         print(f"Take Profit: {take_profit}")
+
+        self.collector.log_transaction("BUY", harga_beli, jumlah_crypto)
 
         while True:
             harga_sekarang = self.api.get_ticker(self.pair)['price'].iloc[-1]
@@ -33,22 +63,19 @@ class SimulationBot:
 
             if harga_sekarang >= take_profit:
                 self.status = "✅ Take Profit Tercapai"
-                print(f"[✅] Take Profit Tercapai pada harga {harga_sekarang}! Menjual aset dalam simulasi...")
+                print(f"[✅] Take Profit Tercapai pada harga {harga_sekarang}! Simulasi menjual aset...")
+                self.collector.log_transaction("SELL", harga_sekarang, jumlah_crypto)
                 break
             elif harga_sekarang <= stop_loss:
                 self.status = "❌ Stop Loss Terpenuhi"
-                print(f"[❌] Stop Loss Terpenuhi pada harga {harga_sekarang}! Menjual aset dalam simulasi...")
+                print(f"[❌] Stop Loss Terpenuhi pada harga {harga_sekarang}! Simulasi menjual aset...")
+                self.collector.log_transaction("SELL", harga_sekarang, jumlah_crypto)
                 break
             else:
                 print("[⏳] Harga belum mencapai Take Profit atau Stop Loss...")
-            time.sleep(5)
+            time.sleep(2)
 
 if __name__ == "__main__":
-    from api_utils import IndodaxAPI  # Pastikan API diimpor dengan benar
-
-    API_KEY = "VONQF0DA-CG1USP8W-PYW9NDGK-V2G0PHZ8-VY1E69YA"
-    SECRET_KEY = "90245e9ccd31f984bbe5117e4e79d422197c063be44f36b4844f05cd227a52665f83d4f4b11e6267"
-
-    api = IndodaxAPI(API_KEY, SECRET_KEY)  # Buat instance API
-    bot = SimulationBot(api=api)  # Pastikan SimulationBot menerima API sebagai parameter
+    api = IndodaxAPI()
+    bot = SimulationBotAI(api)
     bot.simulate_trade()
