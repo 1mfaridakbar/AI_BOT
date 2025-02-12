@@ -1,0 +1,3 @@
+2025-02-12 23:52:05,918 - WARNING - Model untuk btcidr belum tersedia. Melakukan pelatihan...
+2025-02-12 23:52:18,902 - INFO - Model AI dilatih untuk btcidr dengan score: 0.7317088856080027
+2025-02-12 23:52:19,279 - INFO - Prediksi AI untuk btcidr: 1584820950.0 | Harga Saat Ini: 1584997000.0
