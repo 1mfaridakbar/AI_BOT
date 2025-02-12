@@ -13,7 +13,7 @@ logging.basicConfig(filename='ai_trading_log.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 class TradingBotAI:
-    def __init__(self, api, pair="btcidr", modal=20000, stop_loss_pct=0.005, take_profit_pct=0.005):
+    def __init__(self, api, pair="btcidr", modal=20000, stop_loss_pct=0.007, take_profit_pct=0.001):
         self.api = api
         self.pair = pair
         self.modal = modal
@@ -24,6 +24,20 @@ class TradingBotAI:
         self.analysis = TechnicalAnalysis(api, pair)
         self.model = PricePredictor(api, pair)
         self.collector = DataCollector(api, pair)
+        
+    def get_historical_features(self):
+        """Mengambil data historis untuk price_change_3d, price_change_7d, dan price_change_30d"""
+        df = self.collector.get_historical_data()
+        if df is None or len(df) < 30:
+            print("[⚠️] Data historis tidak cukup. Menggunakan nilai default 0.")
+            return 0, 0, 0  # Jika tidak ada data, gunakan nilai default
+
+        df = df.sort_values(by=['date']).reset_index(drop=True)
+        price_change_3d = df['price'].pct_change(periods=3).iloc[-1]
+        price_change_7d = df['price'].pct_change(periods=7).iloc[-1]
+        price_change_30d = df['price'].pct_change(periods=30).iloc[-1]
+
+        return price_change_3d, price_change_7d, price_change_30d
 
     def collect_and_train_data(self):
         print("Mengumpulkan data historis dan melatih model AI...")
@@ -48,8 +62,10 @@ class TradingBotAI:
         bb_upper = analysis['BB_Upper']
         bb_lower = analysis['BB_Lower']
 
+        price_change_3d, price_change_7d, price_change_30d = self.get_historical_features()
+        
         jumlah_crypto = self.modal / harga_beli
-        prediksi_harga = self.model.predict_price(harga_beli)
+        prediksi_harga = self.model.predict_price(harga_beli, rsi, sma, bb_upper, bb_lower, price_change_3d, price_change_7d, price_change_30d)
         stop_loss = harga_beli * (1 - self.stop_loss_pct)
         take_profit = harga_beli * (1 + self.take_profit_pct)
 
