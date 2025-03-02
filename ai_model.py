@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+import sqlite3
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
-from api_utils import IndodaxAPI
 import logging
-import ta  # Library untuk perhitungan indikator teknikal
+import ta
 
 # Konfigurasi Logging
 logging.basicConfig(filename='ai_model_log.log', level=logging.INFO,
@@ -17,12 +17,17 @@ class PricePredictor:
         self.api = api
         self.pair = pair
         self.model_file = f"price_predictor_{self.pair}.pkl"
-        self.data_file = f"historical_data_{self.pair}.csv"
+        self.db_file = "historical_data.db"
         self.model = RandomForestRegressor(n_estimators=100, random_state=42)
         self.feature_names = ["price", "RSI", "SMA", "BB_Upper", "BB_Lower", "price_change_3d", "price_change_7d", "price_change_30d"]
 
     def is_model_trained(self):
         return os.path.exists(self.model_file)
+
+    def save_to_db(self, df):
+        conn = sqlite3.connect(self.db_file)
+        df.to_sql('historical_data', conn, if_exists='append', index=False)
+        conn.close()
 
     def update_historical_data(self):
         """Mengupdate data historis dengan harga terbaru dan indikator teknikal"""
@@ -30,17 +35,10 @@ class PricePredictor:
         if df_new is None or df_new.empty:
             print(f"[⚠️] Tidak bisa mendapatkan data pasar untuk {self.pair}.")
             return
-        
-        df_new = df_new.sort_values(by=['date']).reset_index(drop=True)
 
-        if os.path.exists(self.data_file):
-            df_old = pd.read_csv(self.data_file)
-            df = pd.concat([df_old, df_new]).drop_duplicates().reset_index(drop=True)
-        else:
-            df = df_new
-        
-        df = self.calculate_indicators(df)  # Tambahkan indikator teknikal
-        df.to_csv(self.data_file, index=False)
+        df_new = df_new.sort_values(by=['date']).reset_index(drop=True)
+        df_new = self.calculate_indicators(df_new)
+        self.save_to_db(df_new)
         print(f"[📊] Data historis untuk {self.pair} diperbarui.")
 
     def calculate_indicators(self, df):
@@ -60,11 +58,9 @@ class PricePredictor:
 
     def get_market_data(self):
         """Menggunakan data historis untuk pelatihan AI"""
-        if os.path.exists(self.data_file):
-            df = pd.read_csv(self.data_file)
-        else:
-            print(f"[⚠️] Data historis belum tersedia untuk {self.pair}. Menggunakan data API terbaru...")
-            df = self.api.get_ticker(self.pair)
+        conn = sqlite3.connect(self.db_file)
+        df = pd.read_sql('SELECT * FROM historical_data', conn)
+        conn.close()
 
         if df is None or len(df) < 50:
             print(f"[❌] Data pasar tidak cukup untuk melatih model AI ({len(df)} data).")

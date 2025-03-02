@@ -1,3 +1,65 @@
-2025-02-12 23:52:05,918 - WARNING - Model untuk btcidr belum tersedia. Melakukan pelatihan...
-2025-02-12 23:52:18,902 - INFO - Model AI dilatih untuk btcidr dengan score: 0.7317088856080027
-2025-02-12 23:52:19,279 - INFO - Prediksi AI untuk btcidr: 1584820950.0 | Harga Saat Ini: 1584997000.0
+2025-03-03 01:22:59,696 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-03 01:22:59,697 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-03 01:22:59,701 - INFO -  * Restarting with stat
+2025-03-03 01:23:10,198 - WARNING -  * Debugger is active!
+2025-03-03 01:23:10,232 - INFO -  * Debugger PIN: 149-684-498
+2025-03-03 01:23:22,594 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:22] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:23:22,696 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:22] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:23:22,702 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:22] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:23:22,985 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:22] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:23:23,430 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:23] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:23:23,480 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:23] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:23:23,589 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:23] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:23:23,678 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:23] "[35m[1mGET /api/predict_price HTTP/1.1[0m" 500 -
+2025-03-03 01:23:24,406 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:24] "[35m[1mGET /api/predict_price HTTP/1.1[0m" 500 -
+2025-03-03 01:23:24,726 - INFO - 127.0.0.1 - - [03/Mar/2025 01:23:24] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:25:00,863 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:00] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:25:00,869 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:00] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:25:00,934 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:00] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:25:01,004 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "[35m[1mGET /api/predict_price HTTP/1.1[0m" 500 -
+2025-03-03 01:25:01,122 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:25:01,252 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:25:01,255 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:25:01,360 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "[35m[1mGET /api/predict_price HTTP/1.1[0m" 500 -
+2025-03-03 01:25:01,799 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:01] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:25:02,665 - INFO - 127.0.0.1 - - [03/Mar/2025 01:25:02] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:30:11,987 - INFO -  * Detected change in 'C:\\+cuan\\New folder\\AI_BOT\\app.py', reloading
+2025-03-03 01:30:12,705 - INFO -  * Restarting with stat
+2025-03-03 01:30:22,042 - WARNING -  * Debugger is active!
+2025-03-03 01:30:22,095 - INFO -  * Debugger PIN: 149-684-498
+2025-03-03 01:30:38,427 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-03 01:30:38,427 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-03 01:30:38,431 - INFO -  * Restarting with stat
+2025-03-03 01:30:48,627 - WARNING -  * Debugger is active!
+2025-03-03 01:30:48,675 - INFO -  * Debugger PIN: 149-684-498
+2025-03-03 01:32:27,105 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:27,110 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:27,119 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:27,160 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:27,306 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:27,442 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:27,496 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:27,506 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:27] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:28,049 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:28] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:32:29,434 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:29] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:32:35,050 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:35,054 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:35,055 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:35,063 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:35,281 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:35,385 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:35,389 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:35,402 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:35,922 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:35] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:32:37,072 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:37,075 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:37,077 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:37,079 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:37,448 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "[33mGET /api/technical_indicators HTTP/1.1[0m" 404 -
+2025-03-03 01:32:37,457 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "GET /api/transaction_history HTTP/1.1" 200 -
+2025-03-03 01:32:37,461 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "[33mGET /api/historical_prices HTTP/1.1[0m" 404 -
+2025-03-03 01:32:37,470 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "GET /api/predict_price HTTP/1.1" 200 -
+2025-03-03 01:32:37,586 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:37] "GET /api/saldo HTTP/1.1" 200 -
+2025-03-03 01:32:39,358 - INFO - 127.0.0.1 - - [03/Mar/2025 01:32:39] "GET /api/saldo HTTP/1.1" 200 -
