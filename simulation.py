@@ -62,6 +62,17 @@ class SimulationBotAI:
         prediksi_harga = self.model.predict_price(harga_beli, rsi, sma, bb_upper, bb_lower, price_change_3d, price_change_7d, price_change_30d)
         stop_loss = harga_beli * (1 - self.stop_loss_pct)
         take_profit = harga_beli * (1 + self.take_profit_pct)
+        
+        df = self.collector.get_historical_data()
+        for _, row in df.iterrows():
+            harga_sekarang = row['price']
+            if harga_sekarang >= take_profit:
+                print(f"[✅] Take Profit Tercapai pada harga {harga_sekarang}!")
+                break
+            elif harga_sekarang <= stop_loss:
+                print(f"[❌] Stop Loss Tercapai pada harga {harga_sekarang}!")
+                break
+            time.sleep(0.5)
 
         logging.info(f"Prediksi AI untuk {self.pair}: {prediksi_harga} | Harga Saat Ini: {harga_beli}")
 

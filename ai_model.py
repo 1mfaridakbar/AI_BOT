@@ -77,26 +77,22 @@ class PricePredictor:
         if df is None:
             return
 
-        X = df[self.feature_names]  # Pastikan hanya menggunakan fitur yang sesuai
-        y = df['target']
+        X = df[self.feature_names]
+        y = df['price']
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
         param_grid = {
-            "n_estimators": [50, 100, 200],
-            "max_depth": [None, 10, 20, 30]
+            'n_estimators': [100, 200],
+            'max_depth': [None, 10, 20],
+            'min_samples_split': [2, 5, 10]
         }
+
         grid_search = GridSearchCV(RandomForestRegressor(random_state=42), param_grid, cv=3)
         grid_search.fit(X_train, y_train)
 
         self.model = grid_search.best_estimator_
-
-        print(f"📊 Model training complete untuk {self.pair}. Score: {self.model.score(X_test, y_test)}")
-        logging.info(f"Model AI dilatih untuk {self.pair} dengan score: {self.model.score(X_test, y_test)}")
-
-        # Simpan model bersama dengan feature names yang digunakan
-        joblib.dump((self.model, self.feature_names), self.model_file)
-        print(f"✅ Model telah disimpan sebagai `{self.model_file}`")
+        joblib.dump(self.model, self.model_file)
+        print(f"Model training selesai, skor: {self.model.score(X_test, y_test)}")
 
     def predict_price(self, current_price, rsi, sma, bb_upper, bb_lower, change_3d, change_7d, change_30d):
         if not self.is_model_trained():

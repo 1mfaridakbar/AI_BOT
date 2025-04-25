@@ -1,14 +1,16 @@
 import pandas as pd
 import os
 from api_utils import IndodaxAPI
+import sqlite3
 
 class DataCollector:
     def __init__(self, api, pair="btcidr"):
         self.api = api
         self.pair = pair
-        self.filename = f"historical_data_{self.pair}.csv"
+        self.db_file = f"historical_data_{self.pair}.db"
 
     def log_transaction(self, action, price, jumlah_crypto, profit_loss=None, profit_loss_pct=None):
+        # Simpan transaksi ke dalam database SQLite untuk pencatatan riwayat
         data = {
             "timestamp": pd.Timestamp.now(),
             "pair": self.pair,
@@ -18,18 +20,21 @@ class DataCollector:
             "profit_loss": profit_loss,
             "profit_loss_pct": profit_loss_pct
         }
-        
-        df = pd.DataFrame([data])
-        if not os.path.exists(self.filename):
-            df.to_csv(self.filename, index=False)
-        else:
-            df.to_csv(self.filename, mode='a', header=False, index=False)
 
-        print(f"📌 Data transaksi {action} dicatat dalam {self.filename}")
+        conn = sqlite3.connect(self.db_file)
+        df = pd.DataFrame([data])
+        df.to_sql('transactions', conn, if_exists='append', index=False)
+        conn.close()
+
+        print(f"📌 Data transaksi {action} dicatat dalam database.")
 
     def get_historical_data(self):
-        if os.path.exists(self.filename):
-            return pd.read_csv(self.filename)
-        else:
+        conn = sqlite3.connect(self.db_file)
+        df = pd.read_sql('SELECT * FROM transactions', conn)
+        conn.close()
+
+        if df is None or len(df) == 0:
             print(f"[⚠️] Tidak ada data historis untuk {self.pair}.")
             return None
+
+        return df
