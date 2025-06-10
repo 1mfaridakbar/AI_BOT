@@ -8,4 +8,3 @@ python-dotenv>=0.15.0
 Flask>=2.0.0
 flask-cors>=3.0.10
 plotly>=5.0.0
-pysqlite3-binary
